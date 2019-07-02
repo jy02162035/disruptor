@@ -139,16 +139,5 @@ public class Review {
 		
 		ReentrantLock reentrantLock = new ReentrantLock(true);
 
-	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 }
