@@ -21,21 +21,24 @@ public class NettyServer {
 		//1. 创建两个工作线程组: 一个用于接受网络请求的线程组. 另一个用于实际处理业务的线程组
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workGroup = new NioEventLoopGroup();
-		//2 辅助类
+		//2 辅助类,便于我们快速构建Netty模型
 		ServerBootstrap serverBootstrap = new ServerBootstrap();
 		try {
 			
 			serverBootstrap.group(bossGroup, workGroup)
 			.channel(NioServerSocketChannel.class)
+			// 2个工作线程组大小SYNC+Accept=backlog，连接数，正常通信1024够用了
 			.option(ChannelOption.SO_BACKLOG, 1024)
 			//表示缓存区动态调配（自适应）
 			.option(ChannelOption.RCVBUF_ALLOCATOR, AdaptiveRecvByteBufAllocator.DEFAULT)
 			//缓存区 池化操作
 			.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+			// 添加Netty日志
 			.handler(new LoggingHandler(LogLevel.INFO))
 			.childHandler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				protected void initChannel(SocketChannel sc) throws Exception {
+					// Netty在channel上加一些拦截器对传输到server端的数据进行拦截处理
 					sc.pipeline().addLast(MarshallingCodeCFactory.buildMarshallingDecoder());
 					sc.pipeline().addLast(MarshallingCodeCFactory.buildMarshallingEncoder());
 					sc.pipeline().addLast(new ServerHandler());
