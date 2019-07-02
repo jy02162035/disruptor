@@ -11,6 +11,11 @@ import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.EventHandlerGroup;
 import com.lmax.disruptor.dsl.ProducerType;
 
+/**
+ * 对于同一个对象，多个消费者各自处理自己的业务
+ * @author admin
+ *
+ */
 public class Main {
 
 	
@@ -19,6 +24,7 @@ public class Main {
 			
 		//构建一个线程池用于提交任务
 		ExecutorService es1 = Executors.newFixedThreadPool(1);
+		// 构建线程用来装消费者必须要大于等于消费者数量
 		ExecutorService es2 = Executors.newFixedThreadPool(5);
 		//1 构建Disruptor
 		Disruptor<Trade> disruptor = new Disruptor<Trade>(

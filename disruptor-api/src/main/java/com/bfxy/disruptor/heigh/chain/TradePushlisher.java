@@ -30,7 +30,7 @@ public class TradePushlisher implements Runnable {
 }
 
 /**
- * 
+ * 将原始消息转换成事件
  * @author pengshun.wu
  *
  */
